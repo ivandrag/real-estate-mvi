@@ -2,6 +2,7 @@ package com.example.realestate
 
 import android.app.Application
 import com.example.realestate.di.appModule
+import com.example.realestate.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -15,7 +16,7 @@ class RealEstateApplication : Application() {
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@RealEstateApplication)
-            modules(appModule)
+            modules(appModule, viewModelModule)
         }
     }
 }
