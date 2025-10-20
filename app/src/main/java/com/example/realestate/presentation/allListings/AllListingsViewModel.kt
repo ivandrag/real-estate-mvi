@@ -15,7 +15,7 @@ class AllListingsViewModel(
     private val repository: AllListingsRepository
 ) : ViewModel() {
 
-    private val _event = MutableSharedFlow<Event>(replay = 1)
+    private val _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
     private val _state = MutableStateFlow<State>(State.Loading)
     val state: StateFlow<State> = _state.asStateFlow()

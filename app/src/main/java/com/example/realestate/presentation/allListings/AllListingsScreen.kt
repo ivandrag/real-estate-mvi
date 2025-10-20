@@ -38,17 +38,31 @@ import coil.compose.AsyncImage
 import com.example.realestate.R
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllListingsScreen(
-    viewModel: AllListingsViewModel = koinViewModel()
+    viewModel: AllListingsViewModel = koinViewModel(),
+    onNavigateToListingDetails: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.handleIntent(AllListingsIntent.GetAllListings)
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(viewModel.event, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+            viewModel.event.collect { event ->
+                when (event) {
+                    is Event.NavigateToListingDetails -> onNavigateToListingDetails(event.id)
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -80,7 +94,13 @@ fun AllListingsScreen(
                     } else {
                         ListingsContent(
                             listings = listings,
-                            onListingClick = { }
+                            onListingClick = { id ->
+                                viewModel.handleIntent(
+                                    AllListingsIntent.NavigateToListingDetails(
+                                        id
+                                    )
+                                )
+                            }
                         )
                     }
                 }

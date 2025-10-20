@@ -9,4 +9,7 @@
     <string name="all_listings_title_text">All Listings</string>
     <string name="all_listings_image_content_description">Image of the listing</string>
     <string name="all_listings_empty_list_text">No listings available at the moment</string>
+
+    <!--Listing Details-->
+    <string name="listing_details_title_text">Listing Details</string>
 </resources>
