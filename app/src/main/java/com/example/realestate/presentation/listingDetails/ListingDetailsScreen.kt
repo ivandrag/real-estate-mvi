@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,13 +29,14 @@ import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -177,7 +177,6 @@ fun ListingDetailsContent(
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_8)))
 
-            // Location
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -197,7 +196,7 @@ fun ListingDetailsContent(
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_16)))
 
-            Divider()
+            HorizontalDivider()
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_16)))
 
@@ -213,34 +212,45 @@ fun ListingDetailsContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_16))
             ) {
-                if (listing.bedrooms.isNotEmpty()) {
-                    FeatureCard(
-                        title = stringResource(R.string.listing_details_bedrooms_label),
-                        value = listing.bedrooms,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                FeatureCard(
+                    value = if (listing.bedrooms == 0) {
+                        stringResource(R.string.not_available_text)
+                    } else {
+                        pluralStringResource(
+                            R.plurals.all_listings_beds,
+                            listing.bedrooms,
+                            listing.bedrooms
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-                if (listing.rooms.isNotEmpty()) {
-                    FeatureCard(
-                        title = stringResource(R.string.listing_details_rooms_label),
-                        value = listing.rooms,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                FeatureCard(
+                    value = if (listing.rooms == 0) {
+                        stringResource(R.string.not_available_text)
+                    } else {
+                        pluralStringResource(
+                            R.plurals.all_listings_rooms,
+                            listing.rooms,
+                            listing.rooms
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
-                if (listing.area.isNotEmpty()) {
-                    FeatureCard(
-                        title = stringResource(R.string.listing_details_area_label),
-                        value = listing.area,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                FeatureCard(
+                    value = if (listing.area == 0) {
+                        stringResource(R.string.not_available_text)
+                    } else {
+                        stringResource(R.string.all_listings_area, listing.area)
+                    },
+                    modifier = Modifier.weight(1f)
+                )
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_16)))
 
-            Divider()
+            HorizontalDivider()
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_16)))
 
@@ -264,21 +274,6 @@ fun ListingDetailsContent(
                         .padding(dimensionResource(id = R.dimen.padding_16)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Surface(
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        Text(
-                            text = listing.professional,
-                            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_16)),
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_16)))
-
                     Column {
                         Text(
                             text = listing.professional,
@@ -299,7 +294,6 @@ fun ListingDetailsContent(
 
 @Composable
 private fun FeatureCard(
-    title: String,
     value: String,
     modifier: Modifier = Modifier
 ) {
@@ -312,19 +306,13 @@ private fun FeatureCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(dimensionResource(R.dimen.padding_16)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = value,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }

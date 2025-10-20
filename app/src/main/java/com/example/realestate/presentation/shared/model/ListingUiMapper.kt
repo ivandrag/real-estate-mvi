@@ -10,11 +10,11 @@ fun ListingBO.toListingUI(): Listing {
         city = city,
         propertyType = propertyType,
         price = price.formatPrice(),
-        bedrooms = if (bedrooms == 0) "N/A" else "$bedrooms bed${if (bedrooms != 1) "s" else ""}",
-        area = "${area.toInt()} m²",
+        bedrooms = bedrooms,
+        area = area.toInt(),
         imageUrl = imageUrl,
-        professional = professional.firstOrNull()?.uppercase() ?: "?",
-        rooms = if (rooms == 0) "N/A" else "$rooms room${if (rooms != 1) "s" else ""}"
+        professional = professional,
+        rooms = rooms
     )
 }
 

@@ -5,9 +5,9 @@ data class Listing(
     val city: String,
     val propertyType: String,
     val price: String,
-    val bedrooms: String,
-    val area: String,
+    val bedrooms: Int,
+    val area: Int,
     val imageUrl: String?,
     val professional: String,
-    val rooms: String
+    val rooms: Int
 )

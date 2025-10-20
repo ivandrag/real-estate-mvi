@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,12 +37,12 @@ import coil.compose.AsyncImage
 import com.example.realestate.R
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.realestate.presentation.shared.model.Listing
 import com.example.realestate.presentation.shared.EmptyView
 import com.example.realestate.presentation.shared.ErrorView
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,29 +160,18 @@ private fun ListingCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    dimensionResource(
-                        R.dimen.padding_8
-                    )
-                )
+                .padding(dimensionResource(R.dimen.padding_8))
         ) {
             AsyncImage(
                 model = listing.imageUrl,
                 contentDescription = stringResource(R.string.all_listings_image_content_description),
-                modifier = Modifier
-                    .size(dimensionResource(R.dimen.all_listings_image_size)),
+                modifier = Modifier.size(dimensionResource(R.dimen.all_listings_image_size)),
                 contentScale = ContentScale.Crop,
                 placeholder = painterResource(R.drawable.ic_default_listings_image),
                 error = painterResource(R.drawable.ic_default_listings_image)
             )
 
-            Spacer(
-                modifier = Modifier.width(
-                    dimensionResource(
-                        R.dimen.padding_16
-                    )
-                )
-            )
+            Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_16)))
 
             Column(
                 modifier = Modifier.weight(1f)
@@ -194,13 +182,7 @@ private fun ListingCard(
                     fontWeight = FontWeight.Bold
                 )
 
-                Spacer(
-                    modifier = Modifier.height(
-                        dimensionResource(
-                            R.dimen.padding_4
-                        )
-                    )
-                )
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_4)))
 
                 Text(
                     text = listing.city,
@@ -208,33 +190,45 @@ private fun ListingCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Spacer(
-                    modifier = Modifier.height(
-                        dimensionResource(
-                            R.dimen.padding_8
-                        )
-                    )
-                )
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_8)))
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(
-                        dimensionResource(
-                            R.dimen.padding_8
-                        )
+                        dimensionResource(R.dimen.padding_8)
                     )
                 ) {
-                    PropertyDetail(label = listing.bedrooms)
-                    PropertyDetail(label = listing.rooms)
-                    PropertyDetail(label = listing.area)
+                    PropertyDetail(
+                        label = if (listing.bedrooms == 0) {
+                            stringResource(R.string.not_available_text)
+                        } else {
+                            pluralStringResource(
+                                R.plurals.all_listings_beds,
+                                listing.bedrooms,
+                                listing.bedrooms
+                            )
+                        }
+                    )
+                    PropertyDetail(
+                        label = if (listing.rooms == 0) {
+                            stringResource(R.string.not_available_text)
+                        } else {
+                            pluralStringResource(
+                                R.plurals.all_listings_rooms,
+                                listing.rooms,
+                                listing.rooms
+                            )
+                        }
+                    )
+                    PropertyDetail(
+                        label = if (listing.area == 0) {
+                            stringResource(R.string.not_available_text)
+                        } else {
+                            stringResource(R.string.all_listings_area, listing.area)
+                        }
+                    )
                 }
 
-                Spacer(
-                    modifier = Modifier.height(
-                        dimensionResource(
-                            R.dimen.padding_8
-                        )
-                    )
-                )
+                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_8)))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -247,7 +241,6 @@ private fun ListingCard(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                 }
             }
         }
