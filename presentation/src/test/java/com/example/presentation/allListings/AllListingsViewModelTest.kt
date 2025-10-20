@@ -35,7 +35,7 @@ class AllListingsViewModelTest {
 
         viewModel.handleIntent(AllListingsIntent.GetAllListings)
 
-        assertTrue(viewModel.state.value is State.Loading)
+        assertTrue(viewModel.state.value.isLoading)
     }
 
     @Test
@@ -60,8 +60,7 @@ class AllListingsViewModelTest {
         viewModel.handleIntent(AllListingsIntent.GetAllListings)
 
         val state = viewModel.state.value
-        assertTrue(state is State.Success)
-        state as State.Success
+        assertTrue(state.listings.isNotEmpty())
 
         assertEquals(1, state.listings.size)
         val ui = state.listings.first()
@@ -89,8 +88,8 @@ class AllListingsViewModelTest {
         viewModel.handleIntent(AllListingsIntent.GetAllListings)
 
         val state = viewModel.state.value
-        assertTrue(state is State.Error)
-        assertTrue((state as State.Error).message.contains("error"))
+        assertTrue(state.errorMessage.isNotEmpty())
+        assertTrue((state.errorMessage.contains("error")))
     }
 
     @Test

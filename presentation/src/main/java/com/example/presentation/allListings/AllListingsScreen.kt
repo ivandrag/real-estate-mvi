@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import coil3.compose.AsyncImage
 import com.example.presentation.R
@@ -51,9 +51,8 @@ fun AllListingsScreen(
     viewModel: AllListingsViewModel = koinViewModel(),
     onNavigateToListingDetails: (Int) -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
-
-    LaunchedEffect(Unit) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(viewModel) {
         viewModel.handleIntent(AllListingsIntent.GetAllListings)
     }
 
@@ -83,36 +82,31 @@ fun AllListingsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (state) {
-                is State.Loading -> {
+            when {
+                state.isLoading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
-                is State.Success -> {
-                    val listings = (state as State.Success).listings
-                    if (listings.isEmpty()) {
-                        EmptyView()
-                    } else {
-                        ListingsContent(
-                            listings = listings,
-                            onListingClick = { id ->
-                                viewModel.handleIntent(
-                                    AllListingsIntent.NavigateToListingDetails(
-                                        id
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
-
-                is State.Error -> {
+                state.errorMessage.isNotEmpty() -> {
                     ErrorView(
-                        message = (state as State.Error).message,
+                        message = state.errorMessage,
                         onRetry = { viewModel.handleIntent(AllListingsIntent.GetAllListings) }
                     )
+                }
+
+                state.listings.isNotEmpty() -> {
+                    ListingsContent(
+                        listings = state.listings,
+                        onListingClick = { id ->
+                            viewModel.handleIntent(AllListingsIntent.NavigateToListingDetails(id))
+                        }
+                    )
+                }
+
+                else -> {
+                    EmptyView()
                 }
             }
         }

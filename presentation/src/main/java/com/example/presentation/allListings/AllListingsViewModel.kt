@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class AllListingsViewModel(
     private val repository: AllListingsRepository
@@ -19,7 +20,7 @@ class AllListingsViewModel(
 
     private val _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _state = MutableStateFlow<State>(State())
     val state: StateFlow<State> = _state.asStateFlow()
 
     fun handleIntent(intent: AllListingsIntent) {
@@ -38,24 +39,35 @@ class AllListingsViewModel(
     private fun getAllListings() {
         viewModelScope.launch {
             repository.getListings().collect { result ->
-                _state.value = when (result) {
-                    is Result.Loading -> State.Loading
-                    is Result.Success -> State.Success(result.data.toListingUiList())
-                    is Result.Error -> State.Error(
-                        result.exception.message
-                            ?: "Unknown error occurred when retrieving all listings"
-                    )
+                _state.update { prev ->
+                    when (result) {
+                        is Result.Loading -> prev.copy(
+                            isLoading = prev.listings.isEmpty(),
+                            errorMessage = ""
+                        )
+
+                        is Result.Success -> prev.copy(
+                            isLoading = false,
+                            listings = result.data.toListingUiList(),
+                            errorMessage = ""
+                        )
+
+                        is Result.Error -> prev.copy(
+                            isLoading = false,
+                            errorMessage = result.exception.message ?: "Unknown error"
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-sealed class State {
-    data object Loading : State()
-    data class Success(val listings: List<Listing>) : State()
-    data class Error(val message: String) : State()
-}
+data class State(
+    val isLoading: Boolean = true,
+    val listings: List<Listing> = emptyList(),
+    val errorMessage: String = ""
+)
 
 sealed class Event {
     data class NavigateToListingDetails(val id: Int) : Event()
