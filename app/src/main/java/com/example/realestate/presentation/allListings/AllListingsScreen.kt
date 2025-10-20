@@ -40,6 +40,9 @@ import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.realestate.presentation.shared.model.Listing
+import com.example.realestate.presentation.shared.EmptyView
+import com.example.realestate.presentation.shared.ErrorView
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,7 +93,7 @@ fun AllListingsScreen(
                 is State.Success -> {
                     val listings = (state as State.Success).listings
                     if (listings.isEmpty()) {
-                        EmptyContent()
+                        EmptyView()
                     } else {
                         ListingsContent(
                             listings = listings,
@@ -106,7 +109,7 @@ fun AllListingsScreen(
                 }
 
                 is State.Error -> {
-                    ErrorContent(
+                    ErrorView(
                         message = (state as State.Error).message,
                         onRetry = { viewModel.handleIntent(AllListingsIntent.GetAllListings) }
                     )
@@ -257,78 +260,16 @@ private fun PropertyDetail(label: String) {
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = MaterialTheme.shapes.small
     ) {
-        if (label.isNotEmpty()) {
-            Text(
-                text = label,
-                modifier = Modifier.padding(
-                    horizontal = dimensionResource(
-                        R.dimen.padding_8
-                    ), vertical = dimensionResource(
-                        R.dimen.padding_4
-                    )
-                ),
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-    }
-}
-
-@Composable
-private fun ErrorContent(
-    message: String,
-    onRetry: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_16)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
         Text(
-            text = stringResource(R.string.error_text),
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
-        )
-
-        Spacer(
-            modifier = Modifier.height(
-                dimensionResource(
+            text = label,
+            modifier = Modifier.padding(
+                horizontal = dimensionResource(
                     R.dimen.padding_8
+                ), vertical = dimensionResource(
+                    R.dimen.padding_4
                 )
-            )
-        )
-
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(
-            modifier = Modifier.height(
-                dimensionResource(
-                    R.dimen.padding_16
-                )
-            )
-        )
-
-        Button(onClick = onRetry) {
-            Text(stringResource(R.string.retry_button_text))
-        }
-    }
-}
-
-@Composable
-private fun EmptyContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(R.string.all_listings_empty_list_text),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }

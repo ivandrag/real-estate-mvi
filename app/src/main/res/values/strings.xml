@@ -12,4 +12,11 @@
 
     <!--Listing Details-->
     <string name="listing_details_title_text">Listing Details</string>
+    <string name="listing_details_image_content_description">Property image</string>
+    <string name="listing_details_features_title">Property Features</string>
+    <string name="listing_details_bedrooms_label">Bedrooms</string>
+    <string name="listing_details_rooms_label">Rooms</string>
+    <string name="listing_details_area_label">Area</string>
+    <string name="listing_details_agent_title">Agent Information</string>
+    <string name="listing_details_agent_subtitle">Real Estate Agent</string>
 </resources>

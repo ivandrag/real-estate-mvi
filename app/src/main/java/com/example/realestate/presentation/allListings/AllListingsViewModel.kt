@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.realestate.domain.utils.Result
+import com.example.realestate.presentation.shared.model.Listing
+import com.example.realestate.presentation.allListings.model.toListingUiList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,13 +22,15 @@ class AllListingsViewModel(
     private val _state = MutableStateFlow<State>(State.Loading)
     val state: StateFlow<State> = _state.asStateFlow()
 
-    fun handleIntent(intent: AllListingsIntent)  {
+    fun handleIntent(intent: AllListingsIntent) {
         viewModelScope.launch {
             when (intent) {
                 AllListingsIntent.GetAllListings -> getAllListings()
-                is AllListingsIntent.NavigateToListingDetails -> _event.emit(Event.NavigateToListingDetails(
-                    intent.id
-                ))
+                is AllListingsIntent.NavigateToListingDetails -> _event.emit(
+                    Event.NavigateToListingDetails(
+                        intent.id
+                    )
+                )
             }
         }
     }
@@ -36,7 +40,7 @@ class AllListingsViewModel(
             repository.getListings().collect { result ->
                 _state.value = when (result) {
                     is Result.Loading -> State.Loading
-                    is Result.Success -> State.Success(result.data.toUI())
+                    is Result.Success -> State.Success(result.data.toListingUiList())
                     is Result.Error -> State.Error(
                         result.exception.message
                             ?: "Unknown error occurred when retrieving all listings"
@@ -54,5 +58,5 @@ sealed class State {
 }
 
 sealed class Event {
-    data class NavigateToListingDetails(val id: Int): Event()
+    data class NavigateToListingDetails(val id: Int) : Event()
 }

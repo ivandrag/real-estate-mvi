@@ -1,4 +1,4 @@
-package com.example.realestate.presentation.allListings
+package com.example.realestate.presentation.shared.model
 
 data class Listing(
     val id: Int,

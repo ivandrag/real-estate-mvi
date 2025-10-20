@@ -1,11 +1,11 @@
 package com.example.realestate.data.mapper
 
-import com.example.realestate.data.model.ListingDto
+import com.example.realestate.data.model.ListingResponseDto
 import com.example.realestate.domain.model.ListingBO
 
 class AllListingsMapper {
 
-    fun toListingBO(dto: ListingDto) = ListingBO(
+    fun toListingBO(dto: ListingResponseDto) = ListingBO(
         id = dto.id,
         city = dto.city,
         propertyType = dto.propertyType,
@@ -17,6 +17,6 @@ class AllListingsMapper {
         rooms = dto.rooms ?: 0
     )
 
-    fun toAllListings(allListingsResponse: List<ListingDto>) =
+    fun toAllListings(allListingsResponse: List<ListingResponseDto>) =
         allListingsResponse.map { toListingBO(it) }
 }

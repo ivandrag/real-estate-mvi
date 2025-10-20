@@ -6,22 +6,22 @@ import com.example.realestate.domain.model.ListingBO
 import com.example.realestate.domain.repository.AllListingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-
+import com.example.realestate.domain.utils.Result
 
 class AllListingsRepositoryImpl(
     private val remoteDataSource: AllListingsRemoteDataSource,
     private val mapper: AllListingsMapper
 ) : AllListingsRepository {
 
-    override fun getListings(): Flow<com.example.realestate.domain.utils.Result<List<ListingBO>>> =
+    override fun getListings(): Flow<Result<List<ListingBO>>> =
         flow {
-            emit(com.example.realestate.domain.utils.Result.Loading)
+            emit(Result.Loading)
             try {
                 val response = remoteDataSource.getListings()
                 val listings = mapper.toAllListings(response.items)
-                emit(com.example.realestate.domain.utils.Result.Success(listings))
+                emit(Result.Success(listings))
             } catch (e: Exception) {
-                emit(com.example.realestate.domain.utils.Result.Error(e))
+                emit(Result.Error(e))
             }
         }
 }
