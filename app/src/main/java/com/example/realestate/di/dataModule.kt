@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val dataModule = module {
     factory { AllListingsMapper() }
     factory { AllListingsRemoteDataSource(get()) }
-    factory { AllListingsRepositoryImpl(get(), get()) }
+    factory<AllListingsRepository> { AllListingsRepositoryImpl(get(), get()) }
 }

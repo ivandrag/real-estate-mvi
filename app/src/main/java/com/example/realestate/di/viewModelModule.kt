@@ -5,5 +5,5 @@ import com.example.realestate.presentation.allListings.AllListingsViewModel
 import org.koin.core.module.dsl.viewModel
 
 val viewModelModule = module {
-    viewModel { AllListingsViewModel() }
+    viewModel { AllListingsViewModel(get()) }
 }

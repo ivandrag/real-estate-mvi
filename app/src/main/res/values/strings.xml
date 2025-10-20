@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">RealEstate</string>
 
+    <!--Error-->
+    <string name="error_text">There was an error processing your request.</string>
+    <string name="retry_button_text">Retry</string>
+
     <!--All Listings-->
     <string name="all_listings_title_text">All Listings</string>
+    <string name="all_listings_image_content_description">Image of the listing</string>
+    <string name="all_listings_empty_list_text">No listings available at the moment</string>
 </resources>
