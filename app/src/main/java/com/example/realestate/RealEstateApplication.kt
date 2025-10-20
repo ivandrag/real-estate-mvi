@@ -1,9 +1,9 @@
 package com.example.realestate
 
 import android.app.Application
-import com.example.realestate.di.appModule
-import com.example.realestate.di.dataModule
-import com.example.realestate.di.viewModelModule
+import com.example.data.di.appModule
+import com.example.data.di.dataModule
+import com.example.presentation.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

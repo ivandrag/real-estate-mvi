@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "RealEstate"
 include(":app")
+include(":presentation")
+include(":domain")
+include(":data")

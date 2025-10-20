@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RealEstate">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name="com.example.presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
