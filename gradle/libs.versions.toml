@@ -15,12 +15,17 @@ compose = "1.9.3"
 composeActivity = "1.11.0"
 composeNavigationFragmentKtx = "2.9.5"
 foundationLayoutAndroid = "1.9.3"
-retrofit = "2.9.0"
-okhttp = "4.12.0"
-kotlinx-serialization = "1.6.3"
-coroutines = "1.8.0"
-coil = "2.5.0"
-materialIconsExtended = "1.6.1"
+retrofit = "3.0.0"
+okhttp = "5.12.1"
+kotlinx-serialization = "1.9.0"
+coroutines = "1.10.2"
+coil = "2.7.0"
+materialIconsExtended = "1.7.8"
+
+mockk = "1.14.6"
+turbine = "1.2.1"
+coroutines-test = "1.10.2"
+arch-core-testing = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +55,13 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 materialIconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines-test" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+koin-test-junit4 = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "arch-core-testing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
