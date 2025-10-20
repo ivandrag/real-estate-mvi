@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.Int
 
 class ListingDetailsViewModel(
     private val listingDetailsRepository: ListingDetailsRepository
@@ -19,7 +21,7 @@ class ListingDetailsViewModel(
     private val _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
     fun handleIntent(intent: ListingDetailsIntent) {
@@ -34,24 +36,43 @@ class ListingDetailsViewModel(
     private fun getListingDetails(id: Int) {
         viewModelScope.launch {
             listingDetailsRepository.getListingDetails(id).collect { result ->
-                _state.value = when (result) {
-                    Result.Loading -> State.Loading
-                    is Result.Error -> State.Error(
-                        result.exception.message ?: "Unknown error when retrieving listing details"
-                    )
+                _state.update { prev ->
+                    when (result) {
+                        is Result.Success ->
+                            prev.copy(
+                                isLoading = false,
+                                listing = result.data.toListingUI(),
+                                errorMessage = ""
+                            )
 
-                    is Result.Success -> State.Success(result.data.toListingUI())
+                        is Result.Error ->
+                            prev.copy(
+                                isLoading = false,
+                                errorMessage = result.exception.message
+                                    ?: "Unknown error when retrieving listing details"
+                            )
+                    }
                 }
             }
         }
     }
 }
 
-sealed class State {
-    data object Loading : State()
-    data class Success(val listing: Listing) : State()
-    data class Error(val message: String) : State()
-}
+data class State(
+    val isLoading: Boolean = true,
+    val listing: Listing = Listing(
+        -1,
+        "",
+        "",
+        "",
+        0,
+        0,
+        null,
+        "",
+        0
+    ),
+    val errorMessage: String = ""
+)
 
 sealed class Event {
     data object GoBack : Event()

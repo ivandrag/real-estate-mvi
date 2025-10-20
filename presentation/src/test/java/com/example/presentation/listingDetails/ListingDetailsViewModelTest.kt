@@ -31,16 +31,6 @@ class ListingDetailsViewModelTest {
     }
 
     @Test
-    fun `handleIntent with LoadListingDetails emits Loading`() = runTest {
-        val id = 1
-        coEvery { listingDetailsRepository.getListingDetails(id) } returns flowOf(Result.Loading)
-
-        viewModel.handleIntent(ListingDetailsIntent.LoadListingDetails(id))
-
-        assertTrue(viewModel.state.value is State.Loading)
-    }
-
-    @Test
     fun `handleIntent with LoadListingDetails emits Success with mapped UI`() = runTest {
         val id = 7
         val bo = ListingBO(
@@ -55,15 +45,13 @@ class ListingDetailsViewModelTest {
             rooms = 3
         )
         coEvery { listingDetailsRepository.getListingDetails(id) } returns flow {
-            emit(Result.Loading)
             emit(Result.Success(bo))
         }
 
         viewModel.handleIntent(ListingDetailsIntent.LoadListingDetails(id))
 
         val state = viewModel.state.value
-        assertTrue(state is State.Success)
-        state as State.Success
+        assertTrue(state.listing.id != -1)
 
         val ui = state.listing
         assertEquals(bo.id, ui.id)
@@ -81,17 +69,16 @@ class ListingDetailsViewModelTest {
     @Test
     fun `handleIntent with LoadListingDetails emits Error`() = runTest {
         val id = 3
-        val ex = IllegalStateException("boom")
+        val ex = IllegalStateException("error")
         coEvery { listingDetailsRepository.getListingDetails(id) } returns flow {
-            emit(Result.Loading)
             emit(Result.Error(ex))
         }
 
         viewModel.handleIntent(ListingDetailsIntent.LoadListingDetails(id))
 
         val state = viewModel.state.value
-        assertTrue(state is State.Error)
-        assertTrue((state as State.Error).message.contains("boom"))
+        assertTrue(state.errorMessage.isNotEmpty())
+        assertTrue((state.errorMessage.contains("error")))
     }
 
     @Test
@@ -99,8 +86,8 @@ class ListingDetailsViewModelTest {
         viewModel.event.test {
             viewModel.handleIntent(ListingDetailsIntent.GoBack)
 
-            val ev = awaitItem()
-            assertTrue(ev is Event.GoBack)
+            val event = awaitItem()
+            assertTrue(event is Event.GoBack)
 
             cancelAndIgnoreRemainingEvents()
         }

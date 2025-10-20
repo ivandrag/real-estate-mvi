@@ -15,7 +15,6 @@ class ListingDetailsRepositoryImpl(
 
     override suspend fun getListingDetails(id: Int): Flow<Result<ListingBO>> {
         return flow {
-            emit(Result.Loading)
             try {
                 val response = remoteDataSource.getListingDetails(id)
                 emit(Result.Success(mapper.toListingBO(response)))

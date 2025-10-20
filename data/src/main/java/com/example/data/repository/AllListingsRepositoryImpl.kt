@@ -15,7 +15,6 @@ class AllListingsRepositoryImpl(
 
     override fun getListings(): Flow<Result<List<ListingBO>>> =
         flow {
-            emit(Result.Loading)
             try {
                 val response = remoteDataSource.getListings()
                 val listings = mapper.toAllListings(response.items)

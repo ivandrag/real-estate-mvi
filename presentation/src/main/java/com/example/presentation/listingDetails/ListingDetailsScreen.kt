@@ -102,21 +102,14 @@ fun ListingDetailsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when (state) {
-                is State.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+            when {
+                state.isLoading -> {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
 
-                is State.Success -> {
-                    val listing = (state as State.Success).listing
-                    ListingDetailsContent(listing = listing)
-                }
-
-                is State.Error -> {
+                state.errorMessage.isNotEmpty() -> {
                     ErrorView(
-                        message = (state as State.Error).message,
+                        message = state.errorMessage,
                         onRetry = {
                             viewModel.handleIntent(
                                 ListingDetailsIntent.LoadListingDetails(
@@ -124,6 +117,19 @@ fun ListingDetailsScreen(
                                 )
                             )
                         }
+                    )
+                }
+
+                state.listing.id != -1 -> {
+                    ListingDetailsContent(listing = state.listing)
+                }
+
+                else -> {
+                    Text(
+                        text = stringResource(R.string.all_listings_empty_list_text),
+                        modifier = Modifier.align(Alignment.Center),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

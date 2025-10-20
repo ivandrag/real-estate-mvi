@@ -6,7 +6,6 @@ import com.example.domain.repository.AllListingsRepository
 import com.example.presentation.utils.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -30,15 +29,6 @@ class AllListingsViewModelTest {
     }
 
     @Test
-    fun `handleIntent with GetAllListings emits Loading`() = runTest {
-        coEvery { repository.getListings() } returns flowOf(Result.Loading)
-
-        viewModel.handleIntent(AllListingsIntent.GetAllListings)
-
-        assertTrue(viewModel.state.value.isLoading)
-    }
-
-    @Test
     fun `handleIntent with GetAllListings emits Success with mapped UI list`() = runTest {
         val listingBO = ListingBO(
             id = 1,
@@ -53,7 +43,6 @@ class AllListingsViewModelTest {
         )
 
         coEvery { repository.getListings() } returns flow {
-            emit(Result.Loading)
             emit(Result.Success(listOf(listingBO)))
         }
 
@@ -81,7 +70,6 @@ class AllListingsViewModelTest {
     fun `handleIntent with GetAllListings emits Error`() = runTest {
         val ex = IllegalStateException("error")
         coEvery { repository.getListings() } returns flow {
-            emit(Result.Loading)
             emit(Result.Error(ex))
         }
 

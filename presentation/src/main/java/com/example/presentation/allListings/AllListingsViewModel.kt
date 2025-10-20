@@ -20,7 +20,7 @@ class AllListingsViewModel(
 
     private val _event = MutableSharedFlow<Event>()
     val event = _event.asSharedFlow()
-    private val _state = MutableStateFlow<State>(State())
+    private val _state = MutableStateFlow(State())
     val state: StateFlow<State> = _state.asStateFlow()
 
     fun handleIntent(intent: AllListingsIntent) {
@@ -41,11 +41,6 @@ class AllListingsViewModel(
             repository.getListings().collect { result ->
                 _state.update { prev ->
                     when (result) {
-                        is Result.Loading -> prev.copy(
-                            isLoading = prev.listings.isEmpty(),
-                            errorMessage = ""
-                        )
-
                         is Result.Success -> prev.copy(
                             isLoading = false,
                             listings = result.data.toListingUiList(),

@@ -21,7 +21,7 @@ class ListingDetailsRepositoryImplTest {
     private val repo = ListingDetailsRepositoryImpl(remote, mapper)
 
     @Test
-    fun `getListingDetails emits Loading then Success when API succeeds`() = runTest {
+    fun `getListingDetails emits Success when API succeeds`() = runTest {
         val id = 42
         val dto = ListingResponseDto(
             id = id,
@@ -40,7 +40,6 @@ class ListingDetailsRepositoryImplTest {
         every { mapper.toListingBO(dto) } returns bo
 
         repo.getListingDetails(id).test {
-            assertEquals(Result.Loading, awaitItem())
             val success = awaitItem() as Result.Success
             assertEquals(bo, success.data)
             awaitComplete()
@@ -48,13 +47,12 @@ class ListingDetailsRepositoryImplTest {
     }
 
     @Test
-    fun `getListingDetails emits Loading then Error when API throws`() = runTest {
+    fun `getListingDetails emits Error when API throws`() = runTest {
         val id = 7
         val exception = IllegalStateException("error")
         coEvery { remote.getListingDetails(id) } throws exception
 
         repo.getListingDetails(id).test {
-            assertEquals(Result.Loading, awaitItem())
             val error = awaitItem() as Result.Error
             assertTrue(error.exception is IllegalStateException)
             assertEquals("error", error.exception.message)
