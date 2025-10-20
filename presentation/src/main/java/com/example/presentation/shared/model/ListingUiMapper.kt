@@ -1,8 +1,7 @@
 package com.example.presentation.shared.model
 
 import com.example.domain.model.ListingBO
-import java.text.NumberFormat
-import java.util.Locale
+import com.example.presentation.utils.formatPrice
 
 fun ListingBO.toListingUI(): Listing {
     return Listing(
@@ -16,11 +15,4 @@ fun ListingBO.toListingUI(): Listing {
         professional = professional,
         rooms = rooms
     )
-}
-
-private fun Double.formatPrice(): String {
-    val formatter = NumberFormat.getCurrencyInstance(Locale.getDefault()).apply {
-        maximumFractionDigits = 0
-    }
-    return formatter.format(this)
 }
