@@ -22,7 +22,7 @@ class AllListingsRepositoryImplTest {
     private val repository = AllListingsRepositoryImpl(remoteDataSource, mapper)
 
     @Test
-    fun `getListings emits Loading then Success when API call succeeds`() = runTest {
+    fun `getListings emits Success when API call succeeds`() = runTest {
         val dtoList = listOf(
             ListingResponseDto(
                 id = 1,
@@ -44,7 +44,6 @@ class AllListingsRepositoryImplTest {
         every { mapper.toAllListings(response.items) } returns mapped
 
         repository.getListings().test {
-            assertEquals(Result.Loading, awaitItem())
             val success = awaitItem() as Result.Success
             assertEquals(mapped, success.data)
             awaitComplete()
@@ -52,12 +51,11 @@ class AllListingsRepositoryImplTest {
     }
 
     @Test
-    fun `getListings emits Loading then Error when API call throws`() = runTest {
+    fun `getListings emits Error when API call throws`() = runTest {
         val exception = RuntimeException("network error")
         coEvery { remoteDataSource.getListings() } throws exception
 
         repository.getListings().test {
-            assertEquals(Result.Loading, awaitItem())
             val error = awaitItem() as Result.Error
             assertTrue(error.exception is RuntimeException)
             assertEquals("network error", error.exception.message)
