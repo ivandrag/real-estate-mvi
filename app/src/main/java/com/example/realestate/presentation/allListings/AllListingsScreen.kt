@@ -48,7 +48,7 @@ fun AllListingsScreen(
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getAllListings()
+        viewModel.handleIntent(AllListingsIntent.GetAllListings)
     }
 
     Scaffold(
@@ -88,7 +88,7 @@ fun AllListingsScreen(
                 is State.Error -> {
                     ErrorContent(
                         message = (state as State.Error).message,
-                        onRetry = { viewModel.getAllListings() }
+                        onRetry = { viewModel.handleIntent(AllListingsIntent.GetAllListings) }
                     )
                 }
             }
