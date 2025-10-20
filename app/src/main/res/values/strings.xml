@@ -1,35 +1,3 @@
 <resources>
     <string name="app_name">RealEstate</string>
-
-    <!--Error-->
-    <string name="error_text">There was an error processing your request.</string>
-    <string name="retry_button_text">Retry</string>
-
-    <!--All Listings-->
-    <string name="all_listings_title_text">All Listings</string>
-    <string name="all_listings_image_content_description">Image of the listing</string>
-    <string name="all_listings_empty_list_text">No listings available at the moment</string>
-
-    <plurals name="all_listings_beds">
-        <item quantity="zero">N/A</item>
-        <item quantity="one">%d bed</item>
-        <item quantity="other">%d beds</item>
-    </plurals>
-
-    <plurals name="all_listings_rooms">
-        <item quantity="zero">N/A</item>
-        <item quantity="one">%d room</item>
-        <item quantity="other">%d rooms</item>
-    </plurals>
-
-    <string name="not_available_text">N/A</string>
-    <string name="all_listings_area_zero">N/A</string>
-    <string name="all_listings_area">%s m²</string>
-
-    <!--Listing Details-->
-    <string name="listing_details_title_text">Listing Details</string>
-    <string name="listing_details_image_content_description">Property image</string>
-    <string name="listing_details_features_title">Property Features</string>
-    <string name="listing_details_agent_title">Agent Information</string>
-    <string name="listing_details_agent_subtitle">Real Estate Agent</string>
 </resources>
